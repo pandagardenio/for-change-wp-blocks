@@ -1,0 +1,17 @@
+{
+  "name": "@pandagardenio/for-change-wp-blocks",
+  "version": "1.0.0",
+  "description": "Gutenberg blocks for For Change",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
+    "prezip": "yarn build",
+    "zip": "node utils/zip.js"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^12.6.0",
+    "archiver": "^5.1.0"
+  }
+}
