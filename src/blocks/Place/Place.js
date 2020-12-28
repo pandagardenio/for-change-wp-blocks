@@ -1,7 +1,7 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { Button, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { withSelect } from '@wordpress/data';
-import { MediaUpload } from '@wordpress/editor';
+import { MediaUpload, RichText } from '@wordpress/editor';
 
 import { PhysicalShopsEdit } from './PhysicalShop';
 import { PlaceCategories } from './PlaceCategories';
@@ -21,7 +21,8 @@ registerBlockType('for-change/place', {
             type: 'string'
         },
         description: {
-            type: 'string'
+            source: 'html',
+            selector: '.for-change-description'
         },
         logo: {
             type: 'object'
@@ -65,6 +66,15 @@ registerBlockType('for-change/place', {
         },
         tripadvisor: {
             type: 'string'
+        },
+        youtube: {
+            type: 'string'
+        },
+        vimeo: {
+            type: 'string'
+        },
+        twitch: {
+            type: 'string'
         }
     },
     edit: withPostTitle(({ attributes, postTitle, setAttributes }) => {
@@ -96,7 +106,10 @@ registerBlockType('for-change/place', {
                     }}
                 />
                 <h5>Place description:</h5>
-                <TextControl
+                <RichText 
+                    className="for-change-description"
+                    tagName="div"
+                    placeholder="Enter your description here"
                     value={attributes.description}
                     onChange={description => { setAttributes({ description }); }}
                 />
@@ -176,6 +189,21 @@ registerBlockType('for-change/place', {
                 <TextControl
                     value={attributes.tripadvisor}
                     onChange={tripadvisor => { setAttributes({ tripadvisor }); }}
+                />
+                <h5>Vimeo:</h5>
+                <TextControl
+                    value={attributes.vimeo}
+                    onChange={vimeo => { setAttributes({ vimeo }); }}
+                />
+                <h5>Youtube:</h5>
+                <TextControl
+                    value={attributes.youtube}
+                    onChange={youtube => { setAttributes({ youtube }); }}
+                />
+                <h5>Twitch:</h5>
+                <TextControl
+                    value={attributes.twitch}
+                    onChange={twitch => { setAttributes({ twitch }); }}
                 />
             </React.Fragment>
         );

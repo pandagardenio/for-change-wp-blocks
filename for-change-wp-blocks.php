@@ -4,7 +4,7 @@
  * Plugin Name:       For Change WP Gutenberg blocks
  * Plugin URI:        https://pandagarden.io
  * Description:       Gutenberg blocks for defining Places from For Change
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Pandagardenio
