@@ -21,8 +21,7 @@ registerBlockType('for-change/place', {
             type: 'string'
         },
         description: {
-            source: 'html',
-            selector: '.for-change-description'
+            type: 'string'
         },
         logo: {
             type: 'object'
@@ -94,7 +93,6 @@ registerBlockType('for-change/place', {
                 <MediaUpload
                     onSelect={logo => { setAttributes({ logo }); }}
                     render={({ open }) => {
-                        console.log(attributes.logo);
                         return attributes.logo ? (
                             <img 
                                 src={attributes.logo.sizes.thumbnail.url}
@@ -107,8 +105,6 @@ registerBlockType('for-change/place', {
                 />
                 <h5>Place description:</h5>
                 <RichText 
-                    className="for-change-description"
-                    tagName="div"
                     placeholder="Enter your description here"
                     value={attributes.description}
                     onChange={description => { setAttributes({ description }); }}
