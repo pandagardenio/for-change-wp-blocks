@@ -4,17 +4,23 @@ import PlacesAutocomplete, {
     getLatLng,
 } from 'react-places-autocomplete';
 
-export const AddressControl = (
-    { onChange, value, onSelect }
-) => {
-    const [address, setAddress] = useState(value);
+export type AddressControlProps = {
+    onChange: (address: string) => void;
+    onSelect: (latLng: { lat: number; lng: number}) => void;
+    value: string;
+}
+
+export const AddressControl: React.FunctionComponent<AddressControlProps> = (
+    { onChange, value, onSelect }: AddressControlProps
+): JSX.Element => {
+    const [address, setAddress] = useState<string>(value);
      
-    const handleChange = address => {
+    const handleChange = (address: string): void => {
         setAddress(address);
         onChange && onChange(address);
     };
      
-    const handleSelect = address => {
+    const handleSelect = (address: string): void => {
         geocodeByAddress(address)
             .then(results => getLatLng(results[0]))
             .then(latLng => onSelect(latLng))
@@ -37,7 +43,7 @@ export const AddressControl = (
                             style: {
                                 width: '100%'
                             }
-                        })}
+                        }) as any}
                     />
                     <div className="autocomplete-dropdown-container">
                         {loading && <div>Loading...</div>}
