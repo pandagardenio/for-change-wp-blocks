@@ -13,5 +13,8 @@
   "devDependencies": {
     "@wordpress/scripts": "^12.6.0",
     "archiver": "^5.1.0"
+  },
+  "dependencies": {
+    "react-places-autocomplete": "^7.3.0"
   }
 }

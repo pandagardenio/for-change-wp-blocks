@@ -1,6 +1,8 @@
 import { Button, TextControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 
+import { AddressControl } from '../AddressControl';
+
 const getEmptyShop = () => {
     return {
         address: undefined,
@@ -19,9 +21,14 @@ const PhysicalShopEdit = ({ shop, onChangeShop }) => {
                 onChange={name => { onChangeShop({ ...shop, name }); }}
             />
             <h5>Address</h5>
-            <TextControl
+            <AddressControl
+                onChange={address => {
+                    onChangeShop({ ...shop, address });
+                }}
+                onSelect={latLng => {
+                    onChangeShop({ ... shop, latitude: latLng.lat, longitude: latLng.lng})
+                }}
                 value={shop.address}
-                onChange={address => { onChangeShop({ ...shop, address }); }}
             />
             <h5>Latitude</h5>
             <TextControl

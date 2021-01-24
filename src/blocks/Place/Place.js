@@ -104,10 +104,18 @@ registerBlockType('for-change/place', {
                     }}
                 />
                 <h5>Place description:</h5>
-                <RichText 
+                <RichText
+                    inlineToolbar={true}
                     placeholder="Enter your description here"
                     value={attributes.description}
                     onChange={description => { setAttributes({ description }); }}
+                    style={{
+                        backgroundColor: '#fff',
+                        border: '1px solid rgb(117, 117, 117)',
+                        borderRadius: '2px',
+                        boxShadow: '0 0 0 .5px var(--wp-admin-theme-color)',
+                        padding: '6px 8px'
+                    }}
                 />
                 <h5>Category:</h5>
                 <SelectControl
