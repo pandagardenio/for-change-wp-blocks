@@ -2,10 +2,11 @@ import { registerBlockType, BlockEditProps } from '@wordpress/blocks';
 import React, { useEffect } from 'react';
 
 import { Place, SerialisedPlace } from './Place';
-import { withPostId, withPostTitle } from '../../hoc';
+import { withPostCategories, withPostId, withPostTitle, PostCategory } from '../../hoc';
 import { Shop } from './PhysicalShop';
 
 type PlaceBlockProps = BlockEditProps<SerialisedPlace> & {
+    categories: PostCategory[];
     postId: number;
     postTitle: string;
 };
@@ -15,39 +16,53 @@ type LegacyShop = Shop & {
     longitude: number;
 };
 
+type LegacyPlace = SerialisedPlace & {
+    category: string;
+};
+
 const PlaceBlock: React.FunctionComponent<PlaceBlockProps> = (
-    { attributes, postId, postTitle, setAttributes }: PlaceBlockProps
+    { attributes, categories, postId, postTitle, setAttributes }: PlaceBlockProps
 ): JSX.Element => {
-    if (!attributes.id) {
-        setAttributes({ id: postId });
-    }
-
-    if (!attributes.name) {
-        setAttributes({ name: postTitle });
-    }
-
     const onChange = (place: SerialisedPlace): void => { setAttributes({ ...place }); };
 
+    const getCategory = (slug: string): PostCategory => categories.filter(
+        (postCategory: PostCategory) => postCategory.slug === slug
+    )[0];
+
     useEffect((): void => {
-        setAttributes({
-            physicalShops: attributes.physicalShops.map((shop: LegacyShop): Shop => {
-                if (shop.latitude) {
-                    shop.lat = shop.latitude;
-                    delete shop.latitude;
-                }
+        const attributesToFix: Partial<SerialisedPlace> = {};
 
-                if (shop.longitude) {
-                    shop.lng = shop.longitude;
-                    delete shop.longitude;
-                }
+        if (!attributes.id) {
+            attributesToFix.id = postId;
+        }
 
-                return shop;
-            })
-        });
+        if (!attributes.name) {
+            attributesToFix.name = postTitle;
+        }
+
+        if ((attributes as LegacyPlace).category) {
+            attributesToFix.categories = [getCategory((attributes as LegacyPlace).category)];
+            (attributesToFix as LegacyPlace).category = undefined;
+        }
+
+        attributesToFix.physicalShops = attributes.physicalShops.map((shop: LegacyShop): Shop => {
+            if (shop.latitude) {
+                shop.lat = shop.latitude;
+                delete shop.latitude;
+            }
+
+            if (shop.longitude) {
+                shop.lng = shop.longitude;
+                delete shop.longitude;
+            }
+
+            return shop;
+        })
+        setAttributes(attributesToFix);
     }, []);
 
     return (
-        <Place place={attributes} onChange={onChange}/>
+        <Place categories={categories} place={attributes} onChange={onChange}/>
     )
 };
 
@@ -67,8 +82,10 @@ export const registerPlaceBlock = (): void => {
                 // @ts-ignore
                 type: 'object'
             },
-            category: {
-                type: 'string'
+            categories: {
+                // @ts-ignore
+                type: 'array',
+                default: []
             },
             isVerified: {
                 type: 'boolean',
@@ -118,7 +135,9 @@ export const registerPlaceBlock = (): void => {
             }
         },
         edit: withPostTitle(
-            withPostId<PlaceBlockProps>(PlaceBlock)
+            withPostCategories(
+                withPostId<PlaceBlockProps>(PlaceBlock)
+            )
         ),
         save: () => null
     });
