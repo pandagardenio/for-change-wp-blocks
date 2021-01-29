@@ -59,7 +59,7 @@ const PlaceBlock: React.FunctionComponent<PlaceBlockProps> = (
             return shop;
         })
         setAttributes(attributesToFix);
-    }, []);
+    }, [attributes, categories]);
 
     return (
         <Place categories={categories} place={attributes} onChange={onChange}/>
@@ -81,6 +81,9 @@ export const registerPlaceBlock = (): void => {
             logo: {
                 // @ts-ignore
                 type: 'object'
+            },
+            category: {
+                type: 'string'
             },
             categories: {
                 // @ts-ignore
