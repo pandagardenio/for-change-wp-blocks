@@ -1,47 +1,37 @@
 import { CheckboxControl } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
 import React from 'react';
 
-import { PostCategory } from '../../hoc';
+import { useCategories, useSelectedCategories } from '../../hooks';
+import { isPlaceCategorySelected, PostCategory } from '../../models';
 
-export type PlaceCategoriesProps = {
-    onChange: (categories: PostCategory[]) => void;
-} & {
-    categories: PostCategory[];
-    selectedCategories: PostCategory[];
-}
+export type PlaceCategoriesProps = {}
 
-export const PlaceCategories: React.FunctionComponent<PlaceCategoriesProps> = (
-    { categories = [], onChange, selectedCategories= [] }: PlaceCategoriesProps
-): JSX.Element => {
-    const selectedCategoriesSlug = selectedCategories
-        .filter((category: PostCategory) => !!category)
-        .map((category: PostCategory) => category.slug);
-    
-    const getCategory = (slug: string): PostCategory => categories.filter(
-        (postCategory: PostCategory) => postCategory.slug === slug
-    )[0];
+export const PlaceCategories: React.FunctionComponent<PlaceCategoriesProps> = (): JSX.Element => {
+    const categories = useCategories();
+    const selectedCategories = useSelectedCategories();
+    const dispatch = useDispatch();
 
     const handleChange = (category: PostCategory) => (isChecked: boolean): void => {
-        const placeCategories = isChecked ?
-            [...selectedCategoriesSlug, category.slug] :
+        const selectedCategoriesId = selectedCategories.map((selectedCategory: PostCategory) => selectedCategory.id);
+        const placeCategoriesId: number[] = isChecked ?
+            [...selectedCategoriesId, category.id] :
             [
-                ...selectedCategoriesSlug.slice(0, selectedCategoriesSlug.indexOf(category.slug)),
-                ...selectedCategoriesSlug.slice(selectedCategoriesSlug.indexOf(category.slug) + 1)
+                ...selectedCategoriesId.slice(0, selectedCategoriesId.indexOf(category.id)),
+                ...selectedCategoriesId.slice(selectedCategoriesId.indexOf(category.id) + 1)
             ];
-        onChange(placeCategories.filter((slug: string) => !!slug).map(getCategory));
+        dispatch('core/editor').editPost({
+            categories: placeCategoriesId
+        })
     };
-
-    const isSelected = (slug: string): boolean => !!selectedCategories.filter((category: PostCategory) => {
-        return category && category.slug === slug;
-    })[0];
 
     return (
         <>
             {categories.map((category: PostCategory) => (
                 <CheckboxControl
-                    checked={isSelected(category.slug)}
+                    checked={isPlaceCategorySelected(selectedCategories, category.id)}
                     label={category.name}
-                    value={category.slug}
+                    value={category.id}
                     onChange={handleChange(category)}
                 />
             ))}

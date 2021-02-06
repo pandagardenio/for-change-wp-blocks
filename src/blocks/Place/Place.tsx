@@ -1,11 +1,11 @@
-import { Button, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import { Button, TextControl, ToggleControl } from '@wordpress/components';
 import { MediaUpload, RichText } from '@wordpress/editor';
 import React from 'react';
 
 import { PlaceCategories } from './PlaceCategories';
 import { PhysicalShops } from './PhysicalShops';
 import { Shop } from './PhysicalShop';
-import { PostCategory } from '../../hoc';
+import { PostCategory } from '../../models';
 
 export type SerialisedPlace = {
     categories: PostCategory[];
@@ -32,11 +32,10 @@ export type SerialisedPlace = {
 export type PlaceProps = {
     onChange: (placePartial: Partial<SerialisedPlace>) => void;
     place: SerialisedPlace;
-    categories: PostCategory[];
 };
 
 export const Place: React.FunctionComponent<PlaceProps> = (
-    { categories, onChange, place }: PlaceProps
+    { onChange, place }: PlaceProps
 ): JSX.Element => (
     <>
         <h3>Place</h3>
@@ -74,11 +73,7 @@ export const Place: React.FunctionComponent<PlaceProps> = (
             }}
         />
         <h5>Categories:</h5>
-        <PlaceCategories
-            categories={categories}
-            selectedCategories={place.categories}
-            onChange={(selectedCategories: PostCategory[]) => { onChange({ categories: selectedCategories }); }}
-        />
+        <PlaceCategories/>
         <h5>Is verified:</h5>
         <ToggleControl
             checked={place.isVerified}
