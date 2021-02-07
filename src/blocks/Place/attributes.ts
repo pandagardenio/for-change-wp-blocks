@@ -1,11 +1,24 @@
 import { Block } from "@wordpress/blocks";
+import { select } from "@wordpress/data";
 
 import { SerialisedPlace } from "./Place";
 
 export type Attributes = Block<SerialisedPlace>['attributes'];
+
+export const getTitle = () => select("core/editor").getPostEdits().title !== 'undefined' ?
+    select("core/editor").getPostEdits().title :
+    select("core/editor").getCurrentPost().title;
+
+export const getId = () => select("core/editor").getCurrentPostId();
+
 export const attributes: Attributes = {
+    id: {
+        type: 'number',
+        default: getId()
+    },
     name: {
-        type: 'string'
+        type: 'string',
+        default: getTitle()
     },
     description: {
         type: 'string'
@@ -13,10 +26,6 @@ export const attributes: Attributes = {
     logo: {
         // @ts-ignore
         type: 'object'
-    },
-    categories: {
-        type: 'array',
-        default: []
     },
     isVerified: {
         type: 'boolean',

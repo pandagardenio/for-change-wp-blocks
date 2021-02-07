@@ -1,6 +1,6 @@
 {
   "name": "@pandagardenio/for-change-wp-blocks",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Gutenberg blocks for For Change",
   "main": "index.js",
   "license": "MIT",
